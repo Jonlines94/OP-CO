@@ -207,7 +207,7 @@ def head(title: str, desc: str, base: str) -> str:
 <meta name="description" content="{E(desc)}">
 <meta name="theme-color" content="#0a0908">
 <meta property="og:title" content="{E(title)} | OP-CO"><meta property="og:description" content="{E(desc)}"><meta property="og:type" content="website"><meta property="og:site_name" content="OP-CO Marine">
-<link rel="icon" href="{base}assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{base}assets/img/favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="{base}assets/img/favicon-32.png"><link rel="apple-touch-icon" href="{base}assets/img/apple-touch-icon.png">
 {FONTS}
 <link rel="stylesheet" href="{base}assets/css/style.css">
 <script>document.documentElement.classList.add('js')</script>
