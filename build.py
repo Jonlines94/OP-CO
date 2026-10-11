@@ -341,7 +341,8 @@ out = (tpl.replace("<!--PROJECTS-->", "\n      ".join(proj_cards)).replace("<!--
 print(f"built index.html ({len(PROJECTS)} projects), products.html, {len(SERVICES)} service pages, {len(ALL_IMAGES)} images in manifest")
 
 # --- cache-bust css/js so phones never keep a stale copy ---
-import hashlib, re as _re
+import hashlib, re as _re, pathlib
+root = pathlib.Path(__file__).parent
 _v = hashlib.md5(b"".join((root / p).read_bytes() for p in ("assets/css/style.css", "assets/js/main.js"))).hexdigest()[:8]
 for _f in [root/"index.html", root/"products.html", root/"terms.html", root/"privacy.html", *(root/"services").glob("*.html")]:
     _s = _f.read_text(encoding="utf-8")
