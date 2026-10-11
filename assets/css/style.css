@@ -549,3 +549,13 @@ body.dlg-open { overflow: hidden; }
 .nav__sub { min-width: 310px; }
 .nav__morebtn { line-height: 1; padding-bottom: 2px; }
 @media (max-width: 820px) { .nav__links { overflow-y: auto; padding-bottom: 80px; } }
+
+/* Phones: keep the whole hero inside the first screen (headline never clipped) */
+@media (max-width: 820px) {
+  .hero__stage { min-height: 0; height: 100svh; align-items: start; padding-top: calc(var(--nav-h, 64px) + 6svh); }
+  .hero__copy { width: calc(100% - 40px); }
+  .hero__copy h1 { font-size: clamp(40px, 12.5vw, 56px); line-height: 1.02; }
+  .hero__copy .lead { font-size: 16px; line-height: 1.5; margin-top: 16px; }
+  .hero__cta { margin-top: 22px; gap: 14px; }
+  .hero__cue { display: none; }
+}
