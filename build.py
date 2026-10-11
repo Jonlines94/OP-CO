@@ -210,7 +210,7 @@ def head(title: str, desc: str, base: str) -> str:
 <link rel="icon" href="{base}assets/img/favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="{base}assets/img/favicon-32.png"><link rel="apple-touch-icon" href="{base}assets/img/apple-touch-icon.png">
 {FONTS}
 <link rel="stylesheet" href="{base}assets/css/style.css">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');(function(){{try{{var n=performance.getEntriesByType('navigation')[0];if(n&&n.type==='back_forward')return;if('scrollRestoration' in history)history.scrollRestoration='manual';if(!location.hash){{scrollTo(0,0);addEventListener('load',function(){{scrollTo(0,0)}})}}addEventListener('pagehide',function(){{history.scrollRestoration='auto'}})}}catch(e){{}}}})()</script>
 </head>'''
 
 def figure(media_id: str, alt: str, base: str) -> str:
