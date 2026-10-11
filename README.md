@@ -1,19 +1,31 @@
 # OP-CO Marine — website
 
-Static site (no build step needed to host). Open `index.html` or upload the folder to any web host.
+Static site, no build step needed to host (Netlify: build command blank, publish directory `/`).
 
-- `index.html` — main page (generated from `index.template.html` + `build.py`)
-- `terms.html`, `privacy.html` — legal pages (**paste exact legal wording in before launch**)
-- `assets/` — CSS, JS, logo, team photo
+## Pages
+- `index.html` — home (hero, about, services, projects with pop-ups, team, contact)
+- `services/*.html` — the ten service detail pages (same URLs as the original Wix site)
+- `products.html` — Our Products + "Get a quote" form (the original site's "More → Our Products")
+- `terms.html`, `privacy.html` — legal (**paste exact legal wording before launch**)
+- `_redirects` — keeps old Wix URLs (/general-4, /services-4, /terms-and-conditions …) working
 
-## Edit projects
-Edit the `PROJECTS` list in `build.py`, then run `python3 build.py`.
+## Editing content
+All page content (services, products, projects) lives in `build.py`. Edit, then run `python3 build.py`.
 
-## Hero video
-Drop your video at `assets/video/hero.mp4` (the page falls back to the original Wix-hosted video, then to an animated gradient).
+### Project pop-ups
+Click a project card to open its pop-up. The original site's pop-up text/photos weren't retrievable, so each
+currently shows size, title and category. To add real content, fill `PROJECT_DETAILS` in `build.py`:
 
-## Team photo
-The page tries the full-resolution Wix image first, falling back to `assets/img/team.jpg` (low-res). Replace `team.jpg` with the original for best quality.
+    PROJECT_DETAILS = {1: {"desc": "What we did…", "imgs": ["023e89_xxxx~mv2.jpg"]}}   # key = project number
 
-## Contact form
-Opens the visitor's email app addressed to Info@OP-CO.co.uk. For a true "send" form, connect Formspree/Netlify Forms/etc. in `assets/js/main.js`.
+## Photos
+Photos are loaded from the original Wix CDN until you self-host them. To download them all (run on a computer with
+normal internet access):
+
+    python3 fetch_images.py && python3 build.py
+
+then commit `assets/photos/`. Optional extras: `assets/photos/hero.jpg` (hero background) and
+`service-1.jpg … service-4.jpg` (backgrounds for the four service cards); `assets/video/hero.mp4` (hero video).
+
+## Forms
+The contact and quote forms open the visitor's email app. Swap in Netlify Forms / Formspree for direct submission.

@@ -1,0 +1,11 @@
+# Keep the old Wix URLs working
+/general-4                     /services/avit-projects            301
+/services-4                    /products                          301
+/services/copy-of-fabrications-and-welding /services/machinery-servicing 301
+/data-protection               /privacy                           301
+/terms-and-conditions          /terms                             301
+/about                         /#about                            301
+/services                      /#services                         301
+/projects                      /#projects                         301
+/team                          /#team                             301
+/oldhome                       /                                  301

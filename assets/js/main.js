@@ -159,20 +159,67 @@
     render();
   }
 
-  /* ---------- Contact form → opens the visitor's email app ---------- */
-  const form = $('#form');
-  if (form) {
-    const note = $('#formNote');
+  /* ---------- Forms → open the visitor's email app ---------- */
+  $$('form[data-mailto]').forEach(form => {
+    const note = $('.form__note', form);
     form.addEventListener('submit', e => {
       e.preventDefault();
       const d = Object.fromEntries(new FormData(form));
-      if (!d.name?.trim() || !/^\S+@\S+\.\S+$/.test(d.email || '') || !d.message?.trim()) {
-        note.textContent = 'Please complete your name, a valid email and a message.'; return;
+      const name = (d.name || [d.first, d.last].filter(Boolean).join(' ')).trim();
+      if (!name || !/^\S+@\S+\.\S+$/.test(d.email || '') || (form.id === 'form' && !(d.message || '').trim())) {
+        note.textContent = 'Please complete your name, a valid email' + (form.id === 'form' ? ' and a message.' : '.'); return;
       }
-      const subject = encodeURIComponent('Website enquiry from ' + d.name.trim());
-      const body = encodeURIComponent(d.message.trim() + '\n\n— ' + d.name.trim() + '\n' + d.email.trim());
-      location.href = 'mailto:Info@OP-CO.co.uk?subject=' + subject + '&body=' + body;
-      note.textContent = 'Thanks for submitting! Your email app should open — or write to us at Info@OP-CO.co.uk.';
+      const subject = encodeURIComponent(form.dataset.subject + ' — ' + name);
+      const body = encodeURIComponent(((d.message || '').trim() + '\n\n— ' + name + '\n' + d.email.trim()).trim());
+      location.href = 'mailto:' + form.dataset.mailto + '?subject=' + subject + '&body=' + body;
+      note.textContent = 'Thanks for submitting! Your email app should open — or write to us at ' + form.dataset.mailto + '.';
+    });
+  });
+
+  /* ---------- "More" dropdown ---------- */
+  const more = $('.nav__more');
+  if (more) {
+    const btn = $('.nav__morebtn', more);
+    const set = o => { more.classList.toggle('is-open', o); btn.setAttribute('aria-expanded', String(o)); };
+    btn.addEventListener('click', e => { e.stopPropagation(); set(!more.classList.contains('is-open')); });
+    document.addEventListener('click', e => { if (!more.contains(e.target)) set(false); });
+    addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
+  }
+
+  /* ---------- Project pop-up ---------- */
+  const dlg = $('#projDlg');
+  if (dlg && typeof dlg.showModal === 'function') {
+    const cards = () => $$('.proj').filter(c => !c.classList.contains('is-hidden'));
+    let idx = 0, opener = null;
+    const fill = c => {
+      const sz = $('#dlgSize'); sz.textContent = c.dataset.size || '';
+      if (c.dataset.size) { const t = document.createElement('small'); t.textContent = 'Superyacht'; sz.append(t); }
+      $('#dlgCat').textContent = c.dataset.catlabel;
+      $('#dlgTitle').textContent = c.dataset.title;
+      $('#dlgDesc').textContent = c.dataset.desc || 'Interested in similar work on your vessel? Our team would be happy to talk it through.';
+      const imgs = $('#dlgImgs'); imgs.textContent = '';
+      (c.dataset.imgs || '').split('|').filter(Boolean).forEach(u => {
+        const i = new Image(); i.src = u; i.alt = c.dataset.title; i.onerror = () => i.remove(); imgs.append(i);
+      });
+    };
+    const open = c => {
+      opener = c; idx = cards().indexOf(c); fill(c);
+      if (!dlg.open) { dlg.showModal(); document.body.classList.add('dlg-open'); }
+    };
+    const step = d => { const l = cards(); idx = (idx + d + l.length) % l.length; fill(l[idx]); opener = l[idx]; };
+    $$('.proj').forEach(c => {
+      c.addEventListener('click', () => open(c));
+      c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(c); } });
+    });
+    $('#dlgPrev').addEventListener('click', () => step(-1));
+    $('#dlgNext').addEventListener('click', () => step(1));
+    dlg.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') step(-1); if (e.key === 'ArrowRight') step(1); });
+    dlg.addEventListener('click', e => { if (e.target === dlg || e.target.hasAttribute('data-close')) dlg.close(); });
+    dlg.addEventListener('close', () => { document.body.classList.remove('dlg-open'); opener && opener.focus({ preventScroll: true }); });
+    $('#dlgEnquire').addEventListener('click', e => {
+      e.preventDefault();
+      const msg = $('#f-msg'); if (msg && !msg.value) msg.value = 'I’d like to discuss a project similar to: ' + $('#dlgTitle').textContent + '.';
+      dlg.close(); $('#contact').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
     });
   }
 })();
